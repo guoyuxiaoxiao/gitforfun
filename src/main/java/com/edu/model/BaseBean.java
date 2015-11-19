@@ -11,6 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.edu.base.IBaseBo;
 import com.edu.base.IBaseDao;
 
+/**
+ * 基础实体类
+ * @author Christy
+ *
+ * @param <T>
+ */
 public class BaseBean<T> implements IBaseBo<T>{
 	
 	@Autowired

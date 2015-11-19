@@ -30,34 +30,33 @@ import com.edu.table.UserTable;
 public class UserRoleController {
 	
 	
-	/*@Resource
-	private IUserRoleService userRoleService;
-	*/
+	@Resource
+	private UserBean mUserBean;
 	
 	
-	/*@ResponseBody
+	@ResponseBody
 	@RequestMapping(params="method=deleteUserRole")
 	public String JsonDeleteUserRole(@RequestParam(value="userid") String userid,@RequestParam(value="roleid") String roleid){
 		Map<String, String> require = new HashMap<String, String>();
 		require.put(UserRoleTable.USERID, userid+"");
 		require.put(UserRoleTable.ROLEID, roleid+"");
-		int result = userRoleService.DeleteBean(UserRoleBean.class,UserRoleTable.TABLENAME, require );
+		int result = mUserBean.DeleteBean(UserRoleBean.class,UserRoleTable.TABLENAME, require);
 		return ""+result;
-	}*/
+	}
 	
-	/*@ResponseBody
+	@ResponseBody
 	@RequestMapping(params="method=adduserrole")
 	public String JsonAddRolePower(@RequestParam(value="item") int userid,@RequestParam(value="value") int roleid){
-		int result = userRoleService.AddUserRole(userid, roleid);
+		int result = mUserBean.AddUserRole(userid, roleid);
 		return result+"";
-	}*/
+	}
 	
-	/*@ResponseBody
+	@ResponseBody
 	@RequestMapping(params="method=getuserfunction")
 	public Map<String, Object> JsonGetUserFunction(@RequestParam(value="userid")int userid){
-		List<FunctionBean> result = userRoleService.GetUserFunctions(userid);
+		List<FunctionBean> result = mUserBean.GetUserFunctions(userid);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("functions", result);
 		return map;
-	}*/
+	}
 }

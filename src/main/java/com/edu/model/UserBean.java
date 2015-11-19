@@ -28,15 +28,27 @@ import org.springframework.stereotype.Service;
 
 import com.edu.base.TreeBean;
 import com.edu.base.TreeChildItemBean;
+import com.edu.dao.IRoleDao;
 import com.edu.dao.IUserDao;
+import com.edu.dao.IUserRoleDao;
 import com.edu.imodelfunction.IUserBean;
+import com.edu.table.UserRoleTable;
 
+/**
+ * 用户表
+ * @author Christy
+ *
+ */
 @Table(name="u_user")
 @Entity
 @Service
 public class UserBean extends BaseBean<UserBean> implements IUserBean{
 	@Resource
 	private IUserDao userDao;
+	@Resource
+	private IRoleDao roleDao;
+	@Resource
+	private IUserRoleDao userRoleDao;
 	private Integer id;
 	private String username;
 	private String password;
@@ -139,5 +151,52 @@ public class UserBean extends BaseBean<UserBean> implements IUserBean{
 		map.put("rows", temp);
 		map.put("total", total);
 		return map;
+	}
+
+	
+	@Override
+	public int AddUserRole(int  userid,int roleid) {
+		int fontResult = IsExitUserRole(userid, roleid);
+		if(fontResult==0){
+			UserBean user = (UserBean) userDao.getEntitybyId(UserBean.class, userid);
+			RoleBean role = (RoleBean) roleDao.getEntitybyId(RoleBean.class,roleid);
+			UserRoleBean userRoleBean = new UserRoleBean(user, role);
+			userRoleDao.addEntity(userRoleBean);
+			return 2;
+		}else if(fontResult==1){
+			return 1;
+		}else{
+			return -1;
+		}
+	}
+	
+	@Override
+	public int IsExitUserRole(int userid, int roleid) {
+		Map<String, String> require = new HashMap<String, String>();
+		require.put(UserRoleTable.USERID, userid+"");
+		require.put(UserRoleTable.ROLEID, roleid+"");
+		try {
+			Integer id  = userRoleDao.SqlgetObjectId(UserRoleTable.TABLENAME, require);
+			if(null == id)
+				return 0;
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	@Override
+	public List<FunctionBean> GetUserFunctions(int userid) {
+		UserBean userBean = (UserBean) userDao.getEntitybyId(UserBean.class, userid);
+		Set<RoleBean> roleset= userBean.getRoleBeans();
+		List<FunctionBean> functionBeans = new ArrayList<FunctionBean>();
+		for(RoleBean roleBean: roleset){
+			Set<FunctionBean> functionSet = roleBean.getFunctionBeans();
+			for(FunctionBean functionBean:functionSet){
+				functionBeans.add(functionBean);
+			}
+		}
+		return functionBeans;
 	}
 }
